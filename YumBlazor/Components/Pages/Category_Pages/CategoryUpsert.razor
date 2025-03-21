@@ -1,8 +1,11 @@
 ﻿@page "/category/create"
 @page "/category/update/{id:int}"
 
+
 @inject ICategoryRepository _categoryRepository
 @inject NavigationManager _navigation
+@inject IJSRuntime _IJSRuntime
+
 @if (IsProcessing)
 {
     <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
@@ -37,7 +40,7 @@ else
                             </button>
                         </div>
                         <div class="col-6 col-md-3">
-                            <a href="category"class="btn btn-secondary form-control" disabled="@IsProcessing">
+                            <a href="category" class="btn btn-secondary form-control" disabled="@IsProcessing">
                                 <i class="bi bi-arrow-bar-left"></i> Back to List
                             </a>
                         </div>
@@ -68,6 +71,7 @@ else
             StateHasChanged();
         }
     }
+
     private async Task LoadCategory()
     {
         if (Id > 0)
@@ -81,13 +85,17 @@ else
         if (Id == 0)
         {
             await _categoryRepository.CreateAsync(Category);
+            await _IJSRuntime.ToastrSuccess("Created successfully.");
+
         }
         else
         {
             await _categoryRepository.UpdateAsync(Category);
+            await _IJSRuntime.ToastrSuccess("Updated successfully");
         }
 
         IsProcessing = false;
+
 
         _navigation.NavigateTo("category");
     }
