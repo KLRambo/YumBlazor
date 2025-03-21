@@ -6,7 +6,7 @@ namespace YumBlazor.Data
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage="Please enter a name...")]
+        [Required]
         public string Name { get; set; }
     }
 }
