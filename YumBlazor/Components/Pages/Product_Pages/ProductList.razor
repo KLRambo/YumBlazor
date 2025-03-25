@@ -1,6 +1,5 @@
 ﻿@page "/product"
 
-
 @inject IProductRepository _ProductRepository
 @inject IJSRuntime _IJS
 @inject NavigationManager _navigationManager
@@ -18,7 +17,7 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
+    <div class="card shadow border-0 m-4">
         <div class="card-header bg-black bg-gradient m-lg-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
@@ -66,7 +65,6 @@ else
                             }
                         </tbody>
                     </table>
-
                 }
             </div>
         </div>
@@ -99,7 +97,6 @@ else
     {
         _IJS.InvokeVoidAsync("ShowConfirmationModal");
         DeleteProductId = id;
-
     }
 
     public async Task ConfirmDelete_Click(bool isConfirmed)

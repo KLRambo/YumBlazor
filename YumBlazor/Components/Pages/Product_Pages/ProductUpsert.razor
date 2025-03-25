@@ -1,7 +1,6 @@
 ﻿@page "/product/create"
 @page "/product/update/{id:int}"
 
-
 @inject IProductRepository _productRepository
 @inject NavigationManager _navigation
 @inject IJSRuntime _IJSRuntime
@@ -16,7 +15,7 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
+    <div class="card shadow border-0 m-4">
         <div class="card-header bg-black bg-gradient m-lg-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
@@ -45,7 +44,6 @@ else
                         <label for="Name">Special Tag</label>
                         <ValidationMessage For="@(() => Product.SpecialTag)" />
                     </div>
-
                     <div class="form-floating py-4 col-12">
                         <InputNumber @bind-Value="Product.Price" class="form-control" id="Price" placeholder="Price" />
                         <label for="Name">Price</label>
@@ -61,24 +59,23 @@ else
                         </InputSelect>
                     </div>
 
-                        <div class="form-floating py-4 col-12">
-                            @if (Product.ImageUrl == null)
-                            {
-                                <InputFile OnChange="LoadFiles" class="form-control pb-3" id="customFile" accept="image/x-png,image/jpeg">
+                    <div class="form-floating py-4 col-12">
+                        @if (Product.ImageUrl == null)
+                        {
+                            <InputFile OnChange="LoadFiles" class="form-control pb-3" id="customFile" accept="image/x-png,image/jpeg">
 
-                                </InputFile>
-                                <label for="customFile">Upload Image</label>
-                            }
-                            <div class="row">
-                                <div class="col-3">
-                                    <img src="@Product.ImageUrl" alt="..." class="img-thumbnail" />
-                                </div>
-                                <div class="col-md-9">
-                                    <i class="bi bi-trash btn btn-outline-danger" @onclick="DeleteImage"> Remove</i>
-                                </div>
+                            </InputFile>
+                            <label for="customFile">Upload Image</label>
+                        }
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="@Product.ImageUrl" alt="..." class="img-thumbnail" />
+                            </div>
+                            <div class="col-md-9">
+                                <i class="bi bi-trash btn btn-outline-danger" @onclick="DeleteImage"> Remove</i>
                             </div>
                         </div>
-
+                    </div>
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
                             <button type="submit" class="btn btn-primary form-control" disabled="@IsProcessing">
@@ -190,7 +187,11 @@ else
         var filePathTodelete = Path.Combine(_directoryPath, fileTodelete);
 
         if (!File.Exists(filePathTodelete))
+        {
+            Product.ImageUrl = null;
             return;
+            
+        }
 
         File.Delete(filePathTodelete);
 
