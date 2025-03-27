@@ -1,10 +1,12 @@
 ﻿@page "/cart"
 @using Microsoft.AspNetCore.Authorization
+@using YumBlazor.Utility
 
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject IShoppingCartRepository _cartRepository
 @attribute [Authorize]
-
+@inject IOrderRepository _orderRepository
+@inject NavigationManager _navigationManager
 @if (IsProcessing)
 {
     <div class="position-absolute w-100 vh-100 d-flex flex-column align-items-center bg-white justify-content-center">
@@ -134,7 +136,7 @@ else
         var user = authState.User;
         OrderHeader.Email = user.FindFirst(u => u.Type.Contains("email"))?.Value;
         OrderHeader.UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-
+        OrderHeader.Status = SD.StatusPending;
     }
 
 
@@ -171,9 +173,18 @@ else
 
         await LoadCart();
     }
+
     private async Task ProcessOrderCreation()
     {
-        throw new NotImplementedException();
+        IsProcessing = true;
+
+        await Task.Yield(); // start the processing
+
+        OrderHeader.OrderDetails = SD.ConvertShoppingCArtListToOrderDetail(ShoppingCarts.ToList());
+
+        await _orderRepository.CreateAsync(OrderHeader);
+
+        _navigationManager.NavigateTo($"/order/confirmation/{OrderHeader.Id}");
     }
 }
 }
