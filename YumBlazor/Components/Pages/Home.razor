@@ -2,6 +2,11 @@
 
 @inject IProductRepository _productRepository
 @inject ICategoryRepository _categoryRepository
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject NavigationManager _navigationManager
+@inject IShoppingCartRepository _cartRepository
+@inject IJSRuntime _JS
+@using YumBlazor.Components.Account
 
 <PageTitle>Home</PageTitle>
 
@@ -18,10 +23,10 @@ else
             <div class="m-auto d-flex align-items-center" style="width: 400px; height: 50vh;">
 
                 <div class="d-flex align-items-center" style="width: 100%;">
-                    <input type="text" class="form-control rounded-pill"
-                    @bind:event="oninput" @bind:get="_searchText" @bind:set="FilterProductByName"
-                    placeholder="Search for Food Items"
-                    style="width: 100%; padding: 20px;">
+                    <input id="searchByName" type="text" class="form-control rounded-pill"
+                           @bind:event="oninput" @bind:get="_searchText" @bind:set="FilterProductByName"
+                           placeholder="Search for Food Items"
+                           style="width: 100%; padding: 20px;">
                     <span style="position: relative; left: -43px;"><i class="bi bi-search"></i></span>
                 </div>
             </div>
@@ -68,11 +73,13 @@ else
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title text-center lead text-success">@prod.Name</h5>
+                                <p class="card-text mt-2">@((MarkupString)@prod.Description)</p>
                                 <h4 class="text-center">
-                                    <p class="card-text mt-2">@((MarkupString)prod?.Description)</p>
-
-                                    <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control"> Add to cart</i>
+                                    <div class="m-lg-auto p-2" @onclick="()=>AddOrderItem(prod)">
+                                        <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control"> Add to cart</i>
+                                    </div>
                                 </h4>
+
 
                             </div>
                         </div>
@@ -152,8 +159,36 @@ else
         }
         _searchText = newValueOfSearchText;
     }
+
     private string GetActiveTabClass(int CategoryId)
     {
         return CategoryId == _selectedCategoryId ? "active" : string.Empty;
+    }
+
+    private async Task AddOrderItem(Product product)
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var authenticated = user.Identity is not null && user.Identity.IsAuthenticated;
+
+        if (!authenticated)
+        {
+            _navigationManager.NavigateTo("Account/Login", forceLoad: true);
+        }
+        else
+        {
+            var result = await _cartRepository.UpdateCartAsync(user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value, product.Id, 1);
+
+            if (result)
+            {
+                _JS?.ToastrSuccess("Product added to cart successfully!");
+
+            }
+            else
+            {
+                _JS?.ToastrError("Error was encountered.");
+            }
+        }
+
     }
 }

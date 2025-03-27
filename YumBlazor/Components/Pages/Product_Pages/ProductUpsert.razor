@@ -165,11 +165,11 @@ else
 
         if (!Directory.Exists(_directoryPath))
         {
-            Directory.CreateDirectory(_directoryPath);
+            Directory.CreateDirectory(_directoryPath!);
 
         }
 
-        var path = Path.Combine(_directoryPath, newFileName);
+        var path = Path.Combine(_directoryPath!, newFileName);
         await using FileStream fileStream = new(path, FileMode.Create);
         await file.OpenReadStream(file.Size).CopyToAsync(fileStream);
 
