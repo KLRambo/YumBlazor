@@ -20,7 +20,7 @@ namespace YumBlazor.Repository
             return await context.OrderHeader.Include(u => u.OrderDetails).FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<IEnumerable<OrderHeader>> GetAllASync(string? userId = null)
+        public async Task<IEnumerable<OrderHeader>> GetAllAsync(string? userId = null)
         {
             if (!string.IsNullOrEmpty(userId))
             {

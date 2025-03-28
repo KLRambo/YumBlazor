@@ -128,8 +128,8 @@ span.nav-link {
     color: #212529 !important;
 }
 
-.nav-link:focus, .nav-link:hover {
-    color: #212529;
+/*.nav-link:focus, .nav-link:hover {
+    color: #212529;*/
 }
 
 span.nav-link.active {
