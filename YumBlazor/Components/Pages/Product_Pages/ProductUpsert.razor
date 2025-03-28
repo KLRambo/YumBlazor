@@ -34,10 +34,13 @@ else
                         <label for="Name">Name</label>
                         <ValidationMessage For="@(() => Product.Name)" />
                     </div>
-                    <div class="form-floating py-4 col-12">
+@*                     <div class="form-floating py-4 col-12">
                         <InputText @bind-Value="Product.Description" class="form-control" id="Description" placeholder="Description" />
                         <label for="Name">Description</label>
                         <ValidationMessage For="@(() => Product.Description)" />
+                    </div> *@
+                    <div>
+                        <RadzenHtmlEditor @bind-Value="Product.Description" style="height: 450px;" Input=@OnInput Change=@OnChange Paste=@OnPaste UploadComplete=@OnUploadComplete Execute=@OnExecute UploadUrl="upload/image" />
                     </div>
                     <div class="form-floating py-4 col-12">
                         <InputText @bind-Value="Product.SpecialTag" class="form-control" id="SpecialTag" placeholder="SpecialTag" />
@@ -199,4 +202,28 @@ else
 
         return;
     }
+
+
+    void OnPaste(HtmlEditorPasteEventArgs args)
+    {
+    }
+
+    void OnChange(string html)
+    {
+    }
+
+    void OnInput(string html)
+    {
+    }
+
+    void OnExecute(HtmlEditorExecuteEventArgs args)
+    {
+    }
+
+    void OnUploadComplete(UploadCompleteEventArgs args)
+    {
+    }
+
+
+
 }
